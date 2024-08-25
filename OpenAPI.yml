@@ -1,0 +1,191 @@
+openapi: 3.0.3
+
+info:
+  title: Favorite Musics
+  description: API for training Laravel
+  version: '1.0'
+
+servers:
+  - url: http://localhost:8080/api
+
+tags:
+  - name: Favorite Music
+
+paths:
+  /favorites:
+    get:
+      operationId: listAllFavoriteMusic
+      summary: Get all music
+      description: List all favorites music
+      tags:
+        - Favorite Music
+      parameters:
+        - $ref: "#/components/parameters/orderBy"
+        - $ref: "#/components/parameters/direction"
+      responses:
+        '200':
+          $ref: '#/components/responses/opSuccess'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '500':
+          $ref: '#/components/responses/serverError'
+    post:
+      operationId: createFavoriteMusic
+      summary: Create new music
+      description: Create a new favorite music
+      tags:
+        - Favorite Music
+      requestBody:
+        required: true
+        description: Body with the new music
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simple-music'
+      responses:
+        '201':
+          $ref: '#/components/responses/opSuccess'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '500':
+          $ref: '#/components/responses/serverError'
+  /favorites/{id}:
+    parameters:
+      - $ref: "#/components/parameters/favMusicId"
+    put:
+      operationId: updateFavoriteMusicById
+      summary: Update a music
+      description: Update an existing music
+      tags:
+        - Favorite Music
+      requestBody:
+        required: true
+        description: Body with the new music
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simple-music'
+      responses:
+        '200':
+          $ref: '#/components/responses/opSuccess'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '500':
+          $ref: '#/components/responses/serverError'
+
+components:
+  #* Default Responses
+  responses:
+    'opSuccess':
+      description: Operation Success
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiResponse'
+    #* Bad Request
+    'badRequest':
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Invalid input. Please check your parameters.
+    #* Bad Request
+    'notFound':
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found. Please verify the ID.
+    #* Internal Server Error
+    'serverError':
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Server cannot process the request. Internal Server Error.
+
+  #* Parameters of all endpoints
+  parameters:
+    #* Parameter of get order
+    orderBy:
+      name: orderBy
+      in: query
+      description: Specifies the sorting order of the list. Defaults to tier.
+      required: false
+      schema:
+        type: string
+        enum:
+          - tier
+          - name
+          - id
+          - artist
+        default: tier
+    direction:
+      name: direction
+      in: query
+      description: Specifies the sort direction of the list. Defaults to descending order.
+      required: false
+      schema:
+        type: string
+        enum:
+          - asc
+          - desc
+        default: desc
+    #* Parameter of path ID
+    favMusicId:
+      name: id
+      in: path
+      description: Unique identifier of the music to be updated
+      required: true
+      schema:
+        type: integer
+        example: 1
+
+  #* All shemas results
+  schemas:
+    #* Simple schema of an favorite music
+    simple-music:
+      description: Schema of a simple return
+      properties:
+        id:
+          type: integer
+          description: Identifier
+          example: 1
+        tier:
+          type: integer
+          description: Rank of this music
+          example: 21
+        name:
+          type: string
+          description: Name of the Music
+          maxLength: 255
+          example: Numb
+        artist:
+          type: string
+          description: Artist of the Music
+          maxLength: 255
+          example: Linkin Park
+    #* Default API response 
+    ApiResponse:
+      type: object
+      description: Default API response
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/simple-music'
+
