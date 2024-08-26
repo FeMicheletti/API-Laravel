@@ -13,7 +13,13 @@ All of this is documented in OpenAPI (located in the root).
 - Create a new favorite music
 
 ### PUT
-- Update an existing music
+- Update all of an existing music
+
+### PATCH
+- Update a part of an existing music
+
+### DELETE
+- Delete a music
 
 ## To test, it is necessary to create the table
 

@@ -16,7 +16,7 @@ paths:
     get:
       operationId: listAllFavoriteMusic
       summary: Get all music
-      description: List all favorites music
+      description: List all favorite music
       tags:
         - Favorite Music
       parameters:
@@ -55,12 +55,12 @@ paths:
     put:
       operationId: updateFavoriteMusicById
       summary: Update a music
-      description: Update an existing music
+      description: Update all of an existing music
       tags:
         - Favorite Music
       requestBody:
         required: true
-        description: Body with the new music
+        description: Body with the information to update
         content:
           application/json:
             schema:
@@ -74,16 +74,65 @@ paths:
           $ref: '#/components/responses/notFound'
         '500':
           $ref: '#/components/responses/serverError'
+    patch:
+      operationId: patchFavoriteMusicById
+      summary: Update a music
+      description: Update a music
+      tags:
+        - Favorite Music
+      requestBody:
+        required: true
+        description: Body with the information to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/simple-music'
+      responses:
+        '200':
+          $ref: '#/components/responses/opSuccess'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '500':
+          $ref: '#/components/responses/serverError'
+    delete:
+      operationId: deleteFavoriteMusicById
+      summary: Delete a music
+      description: Delete an existing music
+      tags:
+        - Favorite Music
+      responses:
+        '204':
+          $ref: '#/components/responses/delSuccess'
+        '400':
+          $ref: '#/components/responses/badRequest'
+        '404':
+          $ref: '#/components/responses/notFound'
+        '500':
+          $ref: '#/components/responses/serverError'
 
 components:
   #* Default Responses
   responses:
+    #* Operetion Success
     'opSuccess':
       description: Operation Success
       content:
         application/json:
           schema:
             $ref: '#/components/schemas/ApiResponse'
+    #* Delete Success
+    'delSuccess':
+      description: Deletion Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: Favorite music deleted successfully.
     #* Bad Request
     'badRequest':
       description: Bad request
